@@ -2,6 +2,13 @@
 
 . /usr/local/bin/mbtiles-base
 
+# Do not do anything if the previous digest file does not yet exist (the digest
+# may still be in the process of being computed).
+if ! test -f "$mbtiles_previous_digest"; then
+  log "Skipping mbtiles check because the previous digest is not yet available"
+  exit 0
+fi
+
 # Obtain a digest of all available mbtiles files.
 mbtiles_digest=`/usr/local/bin/compute-mbtiles-digest`
 
