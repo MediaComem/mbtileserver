@@ -1,0 +1,2 @@
+# Reload mbtiles (if required) every minute.
+* * * * * /usr/local/bin/reload-mbtiles-if-changed 1>/dev/stdout 2>/dev/stderr

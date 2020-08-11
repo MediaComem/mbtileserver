@@ -1,0 +1,14 @@
+#!/usr/bin/with-contenv sh
+
+fail() {
+  >&2 echo "$@"
+  exit 1
+}
+
+log() {
+  echo "[mbtiles] [$(date)] $@"
+}
+
+mbtiles_dir="${TILE_DIR:-/tilesets}"
+mbtiles_digest_dir="${TILE_DIGEST_DIR:-/var/lib/digest}"
+mbtiles_digest_file="$mbtiles_digest_dir/sha256"

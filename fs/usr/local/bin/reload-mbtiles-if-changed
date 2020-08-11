@@ -1,0 +1,21 @@
+#!/usr/bin/with-contenv sh
+
+. /usr/local/bin/mbtiles-base
+
+# Obtain a digest of all available mbtiles files.
+mbtiles_digest=`/usr/local/bin/compute-mbtiles-digest`
+
+# Retrieve the digest from the previous execution of this script.
+mbtiles_previous_digest=`cat "$mbtiles_digest_file"`
+
+# Do not do anything if the current digest is equal to the previous digest (i.e.
+# no mbtiles files have been modified).
+if [ "$mbtiles_digest" = "$mbtiles_previous_digest" ]; then
+  exit 0
+fi
+
+log "Changes to mbtiles detected, sending SIGHUP to mbtileserver"
+s6-svc -h /var/run/s6/services/mbtileserver || fail "Failed to send signal to mbtileserver with S6"
+
+# Save the new digest for future comparison.
+/usr/local/bin/save-mbtiles-digest "$mbtiles_digest"

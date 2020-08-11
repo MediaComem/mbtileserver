@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv sh
+
+. /usr/local/bin/mbtiles-base
+
+# Make a list of alphabetically ordered mbtiles files and their SHA-256 digest,
+# then make a SHA-256 digest of that list. It should change each time any
+# mbtiles file is modified.
+find "$mbtiles_dir" -type f -print0|sort -z|xargs -r0 sha256sum|sha256sum|sed 's/ *-//'

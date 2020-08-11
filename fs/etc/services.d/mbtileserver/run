@@ -1,0 +1,2 @@
+#!/usr/bin/with-contenv sh
+exec /mbtileserver --disable-preview --disable-svc-list --enable-reload-signal --root-url /tilesets

@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv sh
+
+. /usr/local/bin/mbtiles-base
+
+mbtiles_digest="$1"
+test -n "$mbtiles_digest" || fail "No digest given as first argument"
+
+log "Saving mbtiles digest $mbtiles_digest to $mbtiles_digest_file"
+printf "$mbtiles_digest" > "$mbtiles_digest_file"

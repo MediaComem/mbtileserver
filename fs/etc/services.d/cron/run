@@ -1,0 +1,2 @@
+#!/usr/bin/with-contenv sh
+/usr/sbin/crond -f -d 8 -l 9 -L /dev/stdout
