@@ -1,0 +1,12 @@
+#!/usr/bin/with-contenv sh
+
+. /usr/local/bin/mbtiles-base
+
+# Compute the current version of available mbtiles files on container startup,
+# unless a version is already available (e.g. from a mounted volume).
+if test -f "$mbtiles_version_file"; then
+  mbtiles_version=`cat "$mbtiles_version_file"`
+  log "Existing mbtiles version $mbtiles_version found in $mbtiles_version_file"
+else
+  save-mbtiles-version "$(compute-mbtiles-version)"
+fi

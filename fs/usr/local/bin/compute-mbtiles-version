@@ -1,0 +1,19 @@
+#!/usr/bin/with-contenv sh
+
+. /usr/local/bin/mbtiles-base
+
+if test -z "$mbtiles_version_type"; then
+  fail "No mbtiles version type specified"
+elif [ "$mbtiles_version_type" = "digest" ]; then
+  # Make a list of alphabetically ordered mbtiles files and their SHA-256
+  # digests, then make a SHA-256 digest of that list. The final digest should
+  # change each time any mbtiles file is modified or moved.
+  find "$mbtiles_dir" -name "*.mbtiles" -type f -print0 | sort -z | xargs -r0 sha256sum | sha256sum | sed 's/ *-//'
+elif [ "$mbtiles_version_type" = "date" ]; then
+  # Make a list of mbtiles files and their last modification times (as Unix
+  # timestamps) ordered by time, and make a SHA-256 digest of that list. The
+  # final digest should change each time any mbtiles file is modified or moved.
+  find "$mbtiles_dir" -name "*.mbtiles" -type f -exec date -r {} -u "+%s {}" \; | sha256sum | sed 's/ *-//'
+else
+  fail "Unsupported mbtiles version type $mbtiles_version_type"
+fi

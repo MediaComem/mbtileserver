@@ -2,27 +2,28 @@
 
 . /usr/local/bin/mbtiles-base
 
-# Do not do anything if the previous digest file does not yet exist (the digest
-# may still be in the process of being computed).
-if ! test -f "$mbtiles_previous_digest"; then
-  log "Skipping mbtiles check because the previous digest is not yet available"
+# Do not do anything if the previous version file does not yet exist (the
+# version may still be in the process of being computed).
+if ! test -f "$mbtiles_version_file"; then
+  log "Skipping mbtiles check because the previous version is not yet available"
   exit 0
 fi
 
-# Obtain a digest of all available mbtiles files.
-mbtiles_digest=`/usr/local/bin/compute-mbtiles-digest`
+# Obtain the version of the mbtiles files.
+mbtiles_version=`compute-mbtiles-version`
 
-# Retrieve the digest from the previous execution of this script.
-mbtiles_previous_digest=`cat "$mbtiles_digest_file"`
+# Retrieve the version from the previous execution of this script.
+mbtiles_previous_version=`cat "$mbtiles_version_file"`
 
-# Do not do anything if the current digest is equal to the previous digest (i.e.
-# no mbtiles files have been modified).
-if [ "$mbtiles_digest" = "$mbtiles_previous_digest" ]; then
+# Do not do anything if the current version is equal to the previous version
+# (i.e. no mbtiles files have been modified).
+if [ "$mbtiles_version" = "$mbtiles_previous_version" ]; then
   exit 0
 fi
 
+log "Version $mbtiles_version != $mbtiles_previous_version"
 log "Changes to mbtiles detected, sending SIGHUP to mbtileserver"
-s6-svc -h /var/run/s6/services/mbtileserver || fail "Failed to send signal to mbtileserver with S6"
+s6-svc -h /var/run/s6/services/mbtileserver || fail "Failed to send signal to mbtileserver"
 
-# Save the new digest for future comparison.
-/usr/local/bin/save-mbtiles-digest "$mbtiles_digest"
+# Save the new version for future comparison.
+save-mbtiles-version "$mbtiles_version" || fail "Failed to save mbtiles version"

@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv sh
+
+. /usr/local/bin/mbtiles-base
+
+mbtiles_version="$1"
+test -n "$mbtiles_version" || fail "No version given as first argument"
+
+log "Saving mbtiles version $mbtiles_version to $mbtiles_version_file"
+printf "$mbtiles_version" > "$mbtiles_version_file"
