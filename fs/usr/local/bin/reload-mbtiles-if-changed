@@ -9,6 +9,12 @@ if ! test -f "$mbtiles_version_file"; then
   exit 0
 fi
 
+# Do not do anything if tiles are currently being recomputed.
+if ls ${mbtiles_dir}/*.mbtiles-journal 1> /dev/null 2>&1; then
+  log "Skipping mbtiles check because the tiles are currently being recomputed"
+  exit 0
+fi
+
 # Obtain the version of the mbtiles files.
 mbtiles_version=`compute-mbtiles-version`
 
